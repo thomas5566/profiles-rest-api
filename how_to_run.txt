@@ -1,0 +1,7 @@
+1. vagrant up
+2. vagrant ssh
+3. cd /vagrant/
+4. python -m venv ~/env
+5. source ~/env/bin/activate 
+6. deactivate
+7. python manage.py runserver 0.0.0.0:8000
