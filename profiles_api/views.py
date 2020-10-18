@@ -8,6 +8,9 @@ from rest_framework import filters
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
+# Make view set is read-only if the user is not authenticated
+from rest_framework.permissions import IsAuthenticated
+
 from profiles_api import serializers
 from profiles_api import models
 from profiles_api import permissions
@@ -106,15 +109,43 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     # assiging the serializer class to a model serializer and queryset
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
-    # authentication_classes set how the user will authenticate 
-    # that is the mechanism they will use 
+    # authentication_classes set how the user will authenticate
+    # that is the mechanism they will use
     authentication_classes = (TokenAuthentication,)
     # the permission classes is set how the user gets permission to do certain things
     permission_classes = (permissions.UpdateOwnProfile,)
-    filter_backends = (filters.SearchFilter,) # added ',' is for tuple not a item
-    search_fields = ('name', 'email',)
+    filter_backends = (filters.SearchFilter,)  # added ',' is for tuple not a item
+    search_fields = (
+        "name",
+        "email",
+    )
+
 
 class UserLoginApiView(ObtainAuthToken):
     """Handle creating user authentication tokens"""
+
     # adds the render classes to our obtain auth token view
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handle creating, reading and updating profile feed items"""
+
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.ProfileFeedItemSerializer
+    queryset = models.ProfileFeedItem.objects.all()
+    # for permissions
+    permission_classes = (
+        permissions.UpdateOwnStatus,
+        # makesure user must be authenticated to perform any request that is not a read request
+        # so that will get rid of the issue of users trying to create a new feed item when they're not authenticated
+        # IsAuthenticatedOrReadOnly,
+        # limit an API to authenticated users only
+        IsAuthenticated,
+    )
+
+    # add a perform create function to Model View set
+    # perform_create gets called every time you do an HTTP POST to our view set
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in user"""
+        serializer.save(user_profile=self.request.user)
