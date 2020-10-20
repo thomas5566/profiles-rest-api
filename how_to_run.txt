@@ -6,9 +6,28 @@
 6. deactivate
 7. python manage.py runserver 0.0.0.0:8000
 
+
+
+
+
 outputting the content of SSH key pair public file
 
 cat ~/.ssh/id_rsa.pub
 
 # run chmod command to set exexutable to any file that ends in .sh in drployed directory
 chmod +x deploy/*.sh
+
+ssh ubuntu@ec2-54-184-73-108.us-west-2.compute.amazonaws.com
+# deploy our code to the AWS server
+# run curl command to download the file and passes it into sudo bash 
+# this curl command is used to retrieve contents from a URL 
+# it's basically a HTTP client in Linux
+# -s is runnin in silent mode which means it won't update us whith all of the steps
+# when it's downloading the file
+# the L is for following redirects so if there's any redirects of this URL then 
+# it will automatically follow them to the final destination and download the contents
+# the | is used to pipe tjeoutput of one command into anther command so we're going to take the
+# output of this curl command and pass it into sudo
+# bash is what we're going to use to run our script
+# - is used to signal the end of the options provided for bash 
+curl -sL https://raw.githubusercontent.com/thomas5566/profiles-rest-api/main/deploy/setup.sh | sudo bash -

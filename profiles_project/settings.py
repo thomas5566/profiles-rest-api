@@ -35,7 +35,9 @@ SECRET_KEY = "^(*w%cc1b%yal*uiccfeysxejoy7muqv)$^@fzy_nsd^gl+5ku"
 # if runing on server DEBUG = False
 DEBUG = bool(int(os.environ.get("DEBUG", 1)))
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS is a setting that allows us to enable access via specific domain names
+# Public IPv4 DNS
+ALLOWED_HOSTS = ["ec2-54-184-73-108.us-west-2.compute.amazonaws.com", "127.0.0.1"]
 
 # Application definition
 
