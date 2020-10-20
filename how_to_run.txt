@@ -5,3 +5,10 @@
 5. source ~/env/bin/activate 
 6. deactivate
 7. python manage.py runserver 0.0.0.0:8000
+
+outputting the content of SSH key pair public file
+
+cat ~/.ssh/id_rsa.pub
+
+# run chmod command to set exexutable to any file that ends in .sh in drployed directory
+chmod +x deploy/*.sh

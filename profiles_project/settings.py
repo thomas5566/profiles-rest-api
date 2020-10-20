@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from re import DEBUG
+
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -23,10 +26,16 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = "^(*w%cc1b%yal*uiccfeysxejoy7muqv)$^@fzy_nsd^gl+5ku"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+# pulls in the value of the environment variable call 'DEBUG'
+# set this environ in the supervisor_profiles_api.conf
+# default is str => int => bool
+# set '1' is default value (if the DEBUG setting doesn't exist)
+# run server on local machine it will set DEBUG = TRUE
+# if runing on server DEBUG = False
+DEBUG = bool(int(os.environ.get("DEBUG", 1)))
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -117,4 +126,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 AUTH_USER_MODEL = "profiles_api.UserProfile"  # profiles_api -> models.py -> UserProfile
+
+STATIC_ROOT = "static/"
 
